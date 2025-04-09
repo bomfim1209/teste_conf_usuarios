@@ -1,0 +1,239 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Usuários {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+	<div class="content">
+		<div class="page-inner">
+			<div class="page-header">
+				<h4 class="page-title">Usuários</h4>
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Configurações</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Usuários</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="add-row" class="display table table-striped table-hover" >
+									<thead>
+										<tr>
+											<th>Email</th>
+											<th>Nome</th>
+											<th>Perfil</th>
+											<th>Equipe</th>
+											<th>Ativo</th>
+											<th>Ação</th>
+										</tr>
+									</thead>
+									<tfoot>
+										<tr>
+											<th>Email</th>
+											<th>Nome</th>
+											<th>Perfil</th>
+											<th>Equipe</th>
+											<th>Ativo</th>
+											<th>Ação</th>
+										</tr>
+									</tfoot>
+									<tbody>
+									{% for u in usuarios %}
+										<tr>
+											<td>{{ u.email }}</td>
+											<td>{{ u.first_name }}</td>
+											<td>
+												{% if u.perfil == '0' %}
+													<span class="red">Aguardando liberação do perfil</span>
+												{% else %}
+													{{ u.descricao }}
+												{% endif %}
+											</td>
+											<td>
+												{% if u.is_staff %}
+													<i class="fa fa-check-circle green" aria-hidden="true"></i>
+												{% else %}
+													<i class="fa fa-ban red" aria-hidden="true"></i>
+												{% endif %}
+											</td>
+											<td>
+												{% if u.is_active %}
+													<i class="fa fa-check-circle green" aria-hidden="true"></i>
+												{% else %}
+													<i class="fa fa-ban red" aria-hidden="true"></i>
+												{% endif %}
+											</td>
+											<td>
+												<div class="form-button-action">
+													<button type="button" data-toggle="modal" class="btn btn-link btn-primary btn-lg"
+													data-target="#editarUsuarioModal-{{ u.id }}">
+														<i class="fa fa-edit" data-toggle="tooltip" title="Editar"></i>
+													</button>
+												</div>
+											</td>
+										</tr>
+
+									<!-- MODAL Atualizar Usuario -->
+									<div class="modal fade" id="editarUsuarioModal-{{ u.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header no-bd">
+													<h5 class="modal-title">
+														<i class="far fa-user"></i>
+														<span class="fw-mediumbold">
+														Editar</span>
+														<span class="fw-light">
+															usuário
+														</span>
+													</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<p class="small">Editar informações do usuário</p>
+													<form action="{% url 'editar_usuario' u.id %}" method="POST">
+													{% csrf_token %}
+														<div class="row">
+															<div class="col-sm-12">
+																<div class="form-group">
+																	<label>Nome</label>
+																	<input name="first_name" type="text" class="form-control" placeholder="Nome do usuário" value="{{ u.first_name }}" required/>
+																</div>
+																<div class="form-group">
+																	<label>Sobrenome</label>
+																	<input name="last_name" type="text" class="form-control" placeholder="Sobrenome do usuário" value="{{ u.last_name }}"/>
+																</div>
+																<div class="form-group">
+																	<label>E-mail</label>
+																	<input name="email" type="email" class="form-control" placeholder="Email" value="{{ u.email }}"/>
+																</div>
+																<div class="form-group">
+																	<label>Perfil</label>
+																	<select name="perfil">
+																		<option value="{{ u.perfil }}" selected>{{ u.descricao }}</option>
+																	{% for p in perfis %}
+																		<option value="{{ p.id }}">{{ p.descricao }}</option>
+																	{% endfor %}
+																	</select>
+																</div>
+																<div class="form-group">
+																	<label>Integrante da Equipe</label><br/>
+																	{% if u.is_staff == 0 %}
+																		<input name="is_staff" type="checkbox" value="0"/> Equipe
+																	{% else %}
+																		<input name="is_staff" type="checkbox" value="1" checked/> Equipe
+																	{% endif %}
+																</div>
+																<div class="form-group">
+																	<label>Ativação / Inativação da Conta</label><br/>
+																	{% if u.is_active == 0 %}
+																		<input name="is_active" type="checkbox" value="0" /> Conta Ativa
+																	{% else %}
+																		<input name="is_active" type="checkbox" value="1" checked /> Conta Ativa
+																	{% endif %}
+																</div>
+																	<input name="password" type="hidden" class="form-control" placeholder="Senha" value="{{ u.password }}" readonly/>
+																	<input name="is_superuser" type="hidden" value="False" />
+																	<input name="last_login" type="hidden" value="{% now 'Y-m-d H:m:s' %}"/>																	
+																	<input name="is_email_verified" type="hidden" value="False"/>
+																	<input name="date_joined" type="hidden" value="{% now 'Y-m-d H:m:s' %}"/>
+															</div>
+														</div>
+														<div class="modal-footer no-bd">
+															<button type="submit" class="btn btn-primary">Salvar</button>
+															<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo2.js"></script>
+	<script >
+		$(document).ready(function() {
+			$('#basic-datatables').DataTable({
+			});
+
+			$('#multi-filter-select').DataTable( {
+				"pageLength": 5,
+				initComplete: function () {
+					this.api().columns().every( function () {
+						var column = this;
+						var select = $('<select class="form-control"><option value=""></option></select>')
+						.appendTo( $(column.footer()).empty() )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+								);
+
+							column
+							.search( val ? '^'+val+'$' : '', true, false )
+							.draw();
+						} );
+
+						column.data().unique().sort().each( function ( d, j ) {
+							select.append( '<option value="'+d+'">'+d+'</option>' )
+						} );
+					} );
+				}
+			});
+
+			// Add Row
+			$('#add-row').DataTable({
+				"pageLength": 5,
+			});
+
+			var action = '<td> <div class="form-button-action"> <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
+
+			$('#addRowButton').click(function() {
+				$('#add-row').dataTable().fnAddData([
+					$("#addName").val(),
+					$("#addPosition").val(),
+					$("#addOffice").val(),
+					action
+					]);
+				$('#addRowModal').modal('hide');
+
+			});
+		});
+	</script>
+
+{% endblock javascripts %}

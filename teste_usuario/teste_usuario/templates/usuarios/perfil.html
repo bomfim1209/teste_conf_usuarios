@@ -1,0 +1,179 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Perfil {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <div class="content">
+    <div class="page-inner">
+      <div class="page-header">
+            <h4 class="page-title">Perfil</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Editar Perfil</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Perfil: {% for p in perfil %} {{ p.descricao }} {% endfor %}</h4>
+                </div>
+                <div class="card-body">
+                  <form action="{% url 'atualizar_perfil' request.user.id %}" method="POST">
+                  {% csrf_token %}
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">E-mail</label>
+                          <input type="email" id="email" name="email" class="form-control" value="{{ request.user.email }}">
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Perfil</label>
+                          <select name="perfil">
+                            {% for p in perfil %}
+                            <option value="{{ request.user.perfil }}" selected>{{ p.descricao }}</option>
+                            {% endfor %}
+                            {% for p in perfis %}
+                            <option value="{{ p.id }}">{{ p.descricao }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nome</label>
+                          <input type="text" id="first_name" name="first_name" class="form-control" value="{{ request.user.first_name }}" required />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Sobrenome</label>
+                          <input type="text" id="last_name" name="last_name" class="form-control" value="{{ request.user.last_name }}" />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">CRMV</label>
+                          <input type="text" id="crmv" name="crmv" class="form-control" value="{{ request.user.crmv }}" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Instituição</label>
+                          <input type="text" id="instituicao" name="instituicao" class="form-control" value="{{ request.user.instituicao }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Local / Unidade</label>
+                          <input type="text" id="local" name="local" class="form-control" value="{{ request.user.local }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Laboratório / Biotério</label>
+                          <input type="text" id="laboratorio" name="laboratorio" class="form-control" value="{{ request.user.laboratorio }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Telefone para contato</label>
+                          <input type="text" id="telefone" name="telefone" class="form-control telefone" value="{{ request.user.telefone }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Endereço</label>
+                          <input type="text" id="endereco" name="endereco" class="form-control" value="{{ request.user.endereco }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Cidade</label>
+                          <input type="text" id="cidade" name="cidade" class="form-control" value="{{ request.user.cidade }}">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">País</label>
+                          <input type="text" id="pais" name="pais" class="form-control" value="{{ request.user.pais }}">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">CEP</label>
+                          <input type="text" id="cep" name="cep" class="form-control" value="{{ request.user.cep }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Observação</label>
+                          <div class="form-group">
+                            <textarea id="obs" name="obs" class="form-control" rows="5">{{ request.user.obs }}</textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="hidden" id="password" name="password" class="form-control" value="{{ request.user.password }}" />
+                    <input type="hidden" id="is_superuser" name="is_superuser" class="form-control" value="{{ request.user.is_superuser }}" />
+                    <input type="hidden" id="is_staff" name="is_staff" class="form-control" value="{{ request.user.is_staff }}" />
+                    <input type="hidden" id="is_active" name="is_active" class="form-control" value="{{ request.user.is_active }}" />
+                    <input type="hidden" id="is_email_verified" name="is_email_verified" class="form-control" value="{{ request.user.is_email_verified }}" />
+                    <input type="hidden" id="last_login" name="last_login" class="form-control" value="{{ request.user.last_login|date:'Y-m-d H:m:s' }}" />
+                    <input type="hidden" id="date_joined" name="date_joined" class="form-control" value="{{ request.user.date_joined|date:'Y-m-d H:m:s' }}" />
+                    <button type="submit" class="btn btn-primary pull-right">Atualizar</button>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script >
+        $(document).ready(function() {
+            $(".telefone").mask("(99) 9999-9999?9").focusout(function (event) {
+                var target, phone, element;
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);
+                element.unmask();
+                if(phone.length > 10) {
+                    element.mask("(99) 99999-999?9");
+                } else {
+                    element.mask("(99) 9999-9999?9");
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}

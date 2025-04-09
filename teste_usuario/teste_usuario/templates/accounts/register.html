@@ -1,0 +1,121 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block title %} Registro de Conta {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">Registro</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+
+                            {% if msg %}
+                                <span class="text-danger">{{ msg | safe }}</span>
+                            {% else %}
+                            <span>
+                                Criar conta
+                            </span>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+
+                                    <!-- Nome -->
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-user"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.first_name }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Sobrenome -->
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-people"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-envelope"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.email }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger">{{ form.email.errors }}</span>
+
+                                    <!-- Senha -->
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-lock"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.password1 }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger">{{ form.password1.errors }}</span>
+
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icon-lock"></i>
+                                                </span>
+                                            </div>
+                                            {{ form.password2 }}
+                                        </div>
+                                        <span>* Todos os campos são obrigatórios</span>
+                                    </div>
+                                    <span class="text-danger">{{ form.password2.errors }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">Registrar</button>
+                            &nbsp; &nbsp;
+                            <a href="{% url 'login' %}" class="btn btn-info">Voltar para tela de Login</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

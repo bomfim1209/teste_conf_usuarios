@@ -47,10 +47,22 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # 'accounts.backends.CustomSaml2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+    #'djangosaml2.backends.Saml2Backend',    
+]
+
+BASE_URL = "http://127.0.0.1:8000"
+
 ROOT_URLCONF = 'teste_usuario.urls'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+
+# LOGIN_URL = '/saml2/login/'
+# LOGOUT_URL = '/saml2/logout/'
+
 TEMPLATE_DIR = os.path.join(BASE_DIR, "teste_usuarios/templates")  # ROOT dir for templates
 
 TEMPLATES = [
@@ -71,6 +83,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'teste_usuario.wsgi.application'
+
+ASGI_APPLICATION = 'teste_usuario.asgi.application'
+
 
 
 # Database
